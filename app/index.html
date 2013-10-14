@@ -28,7 +28,7 @@
 <h2>Already registered</h2>
 <ul>
 	<li ng-repeat="p in people">
-		{{p.name}}
+		{{p.name}} <a ng-click="editById(p.id)" href="#{{p.id}}">edit</a>
 	</li>
 </ul>
 </div>
