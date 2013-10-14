@@ -10,25 +10,27 @@
 	<script src="js/app.js"></script>
 </head>
 <body>
-<h1>Very simple user interfaces</h1>
-<p>
-In a very simple user interface, a form will capture all information in one go. Unfortunately even the simplest domain data models will have attributes that are pointer to other types: for instance a reference to a country in an address.
-</p>
-<p>
-If the data to choose has a small volume of records, as for countries for instance, one could use a simple drop down. But when there are too many records for a drop down or data needs to be searched, the drop down will not satisfy the bill.
-</p>
-<p>
-Here I propose a picker for that purpose.
-</p>
+<h1>People</h1>
 
-<h2>Let's test stuff</h2>
-<p>
-<ul ng-controller="OrgsListCtrl">
-	<li ng-repeat="org in searchResults">
-		{{org.displayName}}
+<h2>Add new</h2>
+<div ng-controller="PeopleCtrl">
+<form ng-submit="addPerson()" class="form-inline" role="form">
+	<div class="form-group">
+		<label for="personName" class="sr-only">Name</label>
+		<input type=text" class="form-control" id="personName"
+			 placeholder="Enter name"
+		     ng-model="personNameNG">
+	</div>
+	<button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+
+<h2>Already registered</h2>
+<ul>
+	<li ng-repeat="p in people">
+		{{p.name}}
 	</li>
 </ul>
-</p>
-<datapicker></datapicker>
+</div>
 </body>
 </html>

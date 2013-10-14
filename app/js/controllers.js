@@ -9,3 +9,12 @@ function OrgsListCtrl($scope, $http) {
 }
 
 //OrgsListCtrl.$inject = ['$scope', '$http'];
+
+function PeopleCtrl($scope, $http) {
+	$scope.people = [];
+
+	$scope.addPerson = function() {
+		$scope.people.push( {name:$scope.personNameNG} );
+		$scope.personNameNG = '';
+	};
+}
