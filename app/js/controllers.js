@@ -13,23 +13,49 @@ function OrgsListCtrl($scope, $http) {
 function PeopleCtrl($scope, $http) {
 	$scope.people = [];
 
+	var resetForm = function() {
+		$scope.person = {};
+		$scope.formTitle = 'Add new';
+		$scope.formButtonLabel = 'Add';
+	};
+	resetForm();
+
 	$scope.addPerson = function() {
-		var pos = $scope.people.length;
-		$scope.people.push(
-			{
-				id: pos,
-				name:$scope.personNameNG
-			} );
-		$scope.personNameNG = '';
+		if (typeof $scope.person.id == 'undefined' ) {
+			var pos = $scope.people.length;
+			$scope.person.id = pos;
+			$scope.people.push( $scope.person );
+		} else {
+			//Replace object in list
+			var id = $scope.person.id;
+			var pList = $scope.people;
+			var i=0, len=pList.length, notReplaced = true;
+
+			for (; notReplaced && i < len; i++) {
+				if (pList[i].id === id) {
+					pList[i] = $scope.person;
+					notReplaced = false;
+				}
+			}
+		}
+		resetForm();
 	};
 
 	$scope.editById = function(id) {
-		alert('You want to edit person with ID=' + id);
-		/* This needs to somehow refresh the model for the Edit form
-		 * which should then change the title, label, prepopulate the form fields
-		 * and setup the label on the button
-		 * the callback would need to behave in a different way: the entire object
-		 * needs to be passed, if no ID, create it. Otherwise update existing.
-		 */
+		var pList = $scope.people;
+		var i=0, len=pList.length;
+		var p = null, item = null;
+
+		for (; p == null && i < len; i++) {
+			item = pList[i];
+			if (item.id === id) {
+				//p = item;
+				//We edit a copy
+				p = angular.copy(item);
+			}
+		}
+		$scope.person = p;
+		$scope.formTitle = 'Edit';
+		$scope.formButtonLabel = 'Apply';
 	}
 }

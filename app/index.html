@@ -12,16 +12,16 @@
 <body>
 <h1>People</h1>
 
-<h2>Add new</h2>
 <div ng-controller="PeopleCtrl">
+<h4>{{formTitle}}</h4>
 <form ng-submit="addPerson()" class="form-inline" role="form">
 	<div class="form-group">
 		<label for="personName" class="sr-only">Name</label>
 		<input type=text" class="form-control" id="personName"
 			 placeholder="Enter name"
-		     ng-model="personNameNG">
+		     ng-model="person.name">
 	</div>
-	<button type="submit" class="btn btn-primary">Add</button>
+	<button type="submit" class="btn btn-primary">{{formButtonLabel}}</button>
 </form>
 
 
