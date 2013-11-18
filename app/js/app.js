@@ -1,25 +1,36 @@
 var app = angular.module("data-picker-tutorial", []);
 
-app.directive("datapicker", function() {
+app.directive("tutorialDatapicker", function($http) {
 	return {
 		restrict: "E",
-		templateUrl: "datapicker/datapicker.html"
-		//From directives talking to controllers video
-/*
-		,
-		controller: function() {
-			return function(scope, element, attrs) {
-				scope.message = "I am working on it";
-//				element.bind("mouseenter", function() {
-//					alert("I am doing the job");
-//				})
-			}
-		}
-*/
-		,
+		scope: {
+			id: '@',
+			bindObj: '=',
+			bindProp: '@'
+		},
+		templateUrl: "datapicker/tutorial-datapicker.html",
+
 		//From angular-app/client/src/app/admin/users/admin-users-edit.js
 		link: function(scope, el, attrs, ctrl) {
-			scope.message = "I am working on it";
+			var url = '../messages/search-orgs.js';
+    		$http.get(url).success(function(data) {
+        		scope.searchResults = data;
+    		});
+			/* Errors have to be handled with
+					.error(function(a,b,c,d) {
+						...
+					})
+			*/
+
+			// Update selection, updates object's property
+			scope.$watch('selection', function(val) {
+					scope.bindObj[scope.bindProp] = val;
+				});
+
+			// Update bindObj, updates selection
+			scope.$watch('bindObj', function(value) {
+				scope.selection = scope.bindObj[scope.bindProp];
+			});
 		}
 	}
-})
+});
