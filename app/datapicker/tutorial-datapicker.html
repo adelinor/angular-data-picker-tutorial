@@ -2,8 +2,10 @@
 	ng-options="o.dn as o.displayName for o in searchResults">
 	<option value=""></option>
 </select>
-<div style="font-size: 80%; color: gray;">
+<div>
+<small>
 selection: {{selection}}
 |
 assigned value: {{bindObj[bindProp]}}
+</small>
 </div>
