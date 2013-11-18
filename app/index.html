@@ -4,13 +4,12 @@
 	<title>Picker</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-<!--
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js"></script>
--->
-<!-- offline angular -->
+<!-- offline angular 
 	<script src="http://localhost/docs/angularjs/1.0.8/angular.js"></script>
 	<script src="http://localhost/docs/angularjs/1.0.8/angular-resource.js"></script>
+-->
 <!-- offline angular -->
 	<script src="js/controllers.js"></script>
 	<script src="js/app.js"></script>
@@ -55,7 +54,9 @@
 	<legend>Already registered</legend>
 <ul>
 	<li ng-repeat="p in people">
-		{{p.name}} <a ng-click="editById(p.id)" href="#{{p.id}}">edit</a>
+		{{p.name}}
+		<span ng-show="p.workAddress">at {{p.workAddress.displayName}}</span>
+		<a ng-click="editById(p.id)" href="#{{p.id}}">edit</a>
 	</li>
 </ul>
 </fieldset>

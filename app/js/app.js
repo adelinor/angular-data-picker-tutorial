@@ -24,12 +24,24 @@ app.directive("tutorialDatapicker", function($http) {
 
 			// Update selection, updates object's property
 			scope.$watch('selection', function(val) {
-					scope.bindObj[scope.bindProp] = val;
+					var m;
+					for (var i = 0; (! m) &&
+							(i < scope.searchResults.length); i++) {
+						var c = scope.searchResults[i];
+						if (val === c.dn) {
+							m = c;
+						}
+					}
+					scope.bindObj[scope.bindProp] = m;
 				});
 
 			// Update bindObj, updates selection
 			scope.$watch('bindObj', function(value) {
-				scope.selection = scope.bindObj[scope.bindProp];
+				scope.selection = undefined;
+				var sel = scope.bindObj[scope.bindProp];
+				if (sel) {
+					scope.selection = sel.dn;
+				}
 			});
 		}
 	}
