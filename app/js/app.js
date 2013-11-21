@@ -12,10 +12,10 @@ app.directive("tutorialDatapicker", function($http) {
 
 		//From angular-app/client/src/app/admin/users/admin-users-edit.js
 		link: function(scope, el, attrs, ctrl) {
-			var searchFn = function(scope) {
+			var searchFn = function(scope, attrName) {
 				var url = '../messages/search-orgs.js';
    				$http.get(url).success(function(data) {
-        			scope.searchResults = data;
+        			scope[attrName] = data;
     			});
 				/* Errors have to be handled with
 					.error(function(a,b,c,d) {
@@ -23,7 +23,7 @@ app.directive("tutorialDatapicker", function($http) {
 					})
 				*/
 			};
-			searchFn(scope);
+			//searchFn(scope, 'searchResults');
 
 			// Update selection, updates object's property
 			scope.$watch('selection', function(val) {
@@ -49,23 +49,14 @@ app.directive("tutorialDatapicker", function($http) {
 				}
 			});
 
-			var searchFn = function(e) {
+			var triggerSearchFn = function(e) {
 				var isReturnKey = (e.keyCode == 13);
-				// && (! e.altKey) && (! e.shiftKey) && (! e.ctrlKey);
 				if (isReturnKey) {
-					alert('is return key? ' + isReturnKey);
-					return false;
+					e.preventDefault();
+					searchFn(scope,'searchResults');
 				}
-				return true;
 			};
-			//el.bind('keypress', searchFn);
-			el.bind('keydown', searchFn);
-
-			var submitFn = function(e) {
-				alert('submit event ' + e);
-				return false;
-			};
-			//el.bind('keypress', submitFn);
+			el.bind('keydown', triggerSearchFn);
 		}
 	}
 });
