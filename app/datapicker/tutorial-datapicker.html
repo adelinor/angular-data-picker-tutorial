@@ -9,3 +9,10 @@ selection: {{selection}}
 assigned value: {{bindObj[bindProp]}}
 </small>
 </div>
+<div>
+	<input type="text" placeholder="Search by name" class="input-xlarge"
+		ng-keyup="alert('key')">
+	<button type="button" class="btn"
+		ng-click="alert('You are searching for ')"
+		>Search</button>
+</div>
