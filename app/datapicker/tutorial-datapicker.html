@@ -1,7 +1,3 @@
-<select class="form-control" name="dropDown_{{id}}" ng-model="selection"
-	ng-options="o.dn as o.displayName for o in searchResults">
-	<option value=""></option>
-</select>
 <div>
 <small>
 selection: {{selection}}
@@ -9,10 +5,35 @@ selection: {{selection}}
 assigned value: {{bindObj[bindProp]}}
 </small>
 </div>
-<div>
+<div class="form-group" ng-show="! selection">
 	<input type="text" placeholder="Search by name" class="input-xlarge"
-		ng-keyup="alert('key')">
-	<button type="button" class="btn"
-		ng-click="alert('You are searching for ')"
+		ng-model="searchText">
+	<button type="button" class="btn" ng-click="searchFn()"
 		>Search</button>
+
+	<table class="table table-condensed table-bordered" style="width: auto;"
+			ng-show="searchResults.length > 0">
+		<caption>Search results: select one of the results ...</caption>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Address</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="o in searchResults">
+				<td><a href="#" ng-click="selectFn(o.dn)">{{o.displayName}}</a></td>
+				<td>{{o.postalAddress}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="form-group" ng-show="selection">
+<div>
+	<span class="input-lg uneditable-input">
+		{{bindObj[bindProp].displayName}}
+	</span>
+  	<button type="button" class="btn" ng-click="unselectFn()">&times;</button>
+</div>
+
 </div>
