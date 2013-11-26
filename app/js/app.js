@@ -51,6 +51,7 @@ app.directive("tutorialDatapicker", function($http) {
 
 			scope.unselectFn = function() {
 				scope.bindObj[scope.bindProp] = undefined;
+				scope.selection = undefined;
 			};
 
 			var setFromId = function(val) {
@@ -74,6 +75,8 @@ app.directive("tutorialDatapicker", function($http) {
 				if (sel) {
 					scope.selection = sel.dn;
 				}
+				scope.searchText = '';
+				scope.searchResults = [];
 			});
 
 			var triggerSearchFn = function(e) {
