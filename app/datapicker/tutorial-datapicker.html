@@ -5,12 +5,16 @@ selection: {{selection}}
 assigned value: {{bindObj[bindProp]}}
 </small>
 </div>
-<div class="form-group" ng-show="! selection">
-	<input type="text" placeholder="Search by name" class="input-xlarge"
+<div class="input-group" ng-show="! selection">
+	<input type="text" placeholder="Search by name" class="form-control"
 		ng-model="searchText">
-	<button type="button" class="btn" ng-click="searchFn()"
-		>Search</button>
+	<span class="input-group-btn">
+		<button type="button" class="btn btn-default" ng-click="searchFn()"
+			>Search</button>
+	</span>
+</div>
 
+<div class="form-group" ng-show="! selection">
 	<table class="table table-condensed table-bordered" style="width: auto;"
 			ng-show="searchResults.length > 0">
 		<caption>Search results: select one of the results ...</caption>
@@ -28,12 +32,11 @@ assigned value: {{bindObj[bindProp]}}
 		</tbody>
 	</table>
 </div>
-<div class="form-group" ng-show="selection">
-<div>
-	<span class="input-lg uneditable-input">
-		{{bindObj[bindProp].displayName}}
+<div class="input-group" ng-show="selection">
+	<input type="text" class="form-control" readonly="readonly"
+			value="{{bindObj[bindProp].displayName}}">
+	<span class="input-group-btn">
+  		<button type="button" class="btn btn-default"
+			ng-click="unselectFn()">&times;</button>
 	</span>
-  	<button type="button" class="btn" ng-click="unselectFn()">&times;</button>
-</div>
-
 </div>
