@@ -34,6 +34,12 @@ app.directive("tutorialDatapicker", function($http) {
 				var url = '../messages/search-orgs.js';
    				$http.get(url).success(function(data) {
         			scope.searchResults = myFilter(data, scope.searchText);
+					
+					if (scope.searchResults.length == 0) {
+						scope.state = 'NOTHING_FOUND';
+					} else {
+						scope.state = '';
+					}
     			});
 				/* Errors have to be handled with
 					.error(function(a,b,c,d) {
@@ -42,16 +48,33 @@ app.directive("tutorialDatapicker", function($http) {
 				*/
 			};
 
+			scope.clearStateFn = function() {
+				scope.searchText = '';
+				scope.searchResults = [];
+				scope.state = '';
+			};
+
 			scope.selectFn = function(dn) {
 				scope.selection = dn;
 				setFromId(dn);
-				scope.searchText = '';
-				scope.searchResults = [];
+				scope.clearStateFn();
 			};
 
 			scope.unselectFn = function() {
 				scope.bindObj[scope.bindProp] = undefined;
 				scope.selection = undefined;
+			};
+
+			scope.errorFn = function() {
+				return scope.state == 'NOTHING_FOUND';
+			};
+
+			scope.decodeFn = function(boolExpr,r,otherwiseR) {
+				if (boolExpr) {
+					return r;
+				} else {
+					return otherwiseR;
+				}
 			};
 
 			var setFromId = function(val) {
@@ -75,8 +98,7 @@ app.directive("tutorialDatapicker", function($http) {
 				if (sel) {
 					scope.selection = sel.dn;
 				}
-				scope.searchText = '';
-				scope.searchResults = [];
+				scope.clearStateFn();
 			});
 
 			var triggerSearchFn = function(e) {
