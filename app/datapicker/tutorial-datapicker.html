@@ -5,28 +5,23 @@ selection: {{selection}}
 assigned value: {{bindObj[bindProp]}}
 </small>
 </div> -->
-<div ng-class="{'has-error': errorFn()}">
 <div class="input-group" ng-show="! selection">
 	<input type="text" placeholder="Search by name" class="form-control"
 		ng-model="searchText">
 	<span class="input-group-btn">
-		<button type="button" class="btn btn-default" ng-click="searchFn()"
-ng-style="{'border-color': decodeFn(errorFn(),'#b94a48',''),
-           'color': decodeFn(errorFn(),'#b94a48','')
-          }"
+		<button type="button" class="btn"
+				ng-class="cssBtn(formGroupCssClass)" 
+				ng-click="searchFn()"
 			>Search</button>
 	</span>
 </div>
-<p class="help-block"
-	ng-show="state == 'NOTHING_FOUND'">No results found for the provided criteria</p>
-</div>
+<p class="help-block" ng-show="errorMessages[state]">{{errorMessages[state]}}</p>
 
-
-<div class="form-group" ng-show="! selection">
-	<!-- table class="table table-bordered table-condensed" -->
-	<table class="table table-hover"
-			ng-show="searchResults.length > 0">
-		<caption>Search results: select one of the results ...</caption>
+<div class="panel" ng-class="cssPanel(formGroupCssClass)"
+     style="margin-top: 1em;" ng-show="searchResults.length > 0">
+	<div class="panel-heading">Select one of the results ...</div>
+	
+	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th>Name</th>

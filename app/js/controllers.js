@@ -57,5 +57,5 @@ function PeopleCtrl($scope, $http) {
 		$scope.person = p;
 		$scope.formTitle = 'Edit';
 		$scope.formButtonLabel = 'Apply';
-	}
+	};
 }

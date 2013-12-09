@@ -3,14 +3,16 @@
 <head>
 	<title>Picker</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- cdn
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js"></script>
-<!-- local
+  -->
+<!-- local -->
 	<script src="http://localhost/docs/angularjs/1.0.8/angular.js"></script>
 	<script src="http://localhost/docs/angularjs/1.0.8/angular-resource.js"></script>
 	<link rel="stylesheet" href="../../../bootstrap/3.0.2/css/bootstrap.min.css">
-  -->
+<!-- local -->
 	<script src="js/controllers.js"></script>
 	<script src="js/app.js"></script>
 </head>
@@ -22,25 +24,26 @@
 <fieldset>
 	<legend>{{formTitle}}</legend>
 	<div class="form-group">
-		<label for="personName">Name</label>
+		<label class="control-label" for="personName">Name</label>
 		<input type=text" class="form-control" id="personName"
 			 placeholder="Enter name"
 		     ng-model="person.name">
 	</div>
-	<div class="form-group">
-		<label for="workAddress">Company</label>
+	<div class="form-group" ng-class="errorClass">
+		<label class="control-label" for="workAddress">Company</label>
 		<tutorial-datapicker id="workAddress"
 			bind-obj="person"
-			bind-prop="workAddress"></tutorial-datapicker>
+			bind-prop="workAddress"
+			search-size-limit="5"></tutorial-datapicker>
 	</div>
 	<div class="form-group">
-		<label for="tel">Tel</label>
+		<label class="control-label" for="tel">Tel</label>
 		<input type=text" class="form-control" id="tel"
 			 placeholder="+44 123 456 789"
 		     ng-model="person.tel">
 	</div>
 	<div class="form-group">
-		<label for="mail">E-mail</label>
+		<label class="control-label" for="mail">E-mail</label>
 		<input type=text" class="form-control" id="mail"
 			 placeholder="bertrand@studio.com"
 		     ng-model="person.mail">
