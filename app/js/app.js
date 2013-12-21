@@ -1,10 +1,10 @@
 var app = angular.module("data-picker-tutorial", []);
 
-app.factory('totoProvider', ["$http",function($http) {
-	return new TotoProvider($http);
+app.factory('orgSearchProvider', ["$http",function($http) {
+	return new OrgSearchProvider($http);
 }]);
 
-app.directive("tutorialDatapicker", function($http,totoProvider) {
+app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 	return {
 		restrict: "E",
 		scope: {
@@ -17,9 +17,6 @@ app.directive("tutorialDatapicker", function($http,totoProvider) {
 
 		//From angular-app/client/src/app/admin/users/admin-users-edit.js
 		link: function(scope, el, attrs, ctrl) {
-			//alert('t='+ totoProvider);
-			totoProvider.salut();
-
 			scope.errorMessages = {
 				'NOTHING_FOUND': 'No results found for the provided criteria',
 				'SEARCH_LIMIT_EXCEEDED': 'Number of results exceeds limit,' +
@@ -29,28 +26,9 @@ app.directive("tutorialDatapicker", function($http,totoProvider) {
 				'NOTHING_FOUND': 'has-error',
 				'SEARCH_LIMIT_EXCEEDED': 'has-warning'
 			};
-			var myFilter = function(orgs, text) {
-				if (! text) {
-					return orgs;
-				}
-				text = text.toLowerCase();
-				if (! orgs) {
-					return [];
-				}
-				var result = [];
-				for(var i = 0; i < orgs.length; i++) {
-					var o = orgs[i];
-					var n = o.displayName;
-					if (n && (n.toLowerCase().indexOf(text) != -1)) {
-						result.push(o);
-					}
-				}
-				return result;
-			};
 			scope.searchFn = function() {
-				var url = '../messages/search-orgs.js';
-   				$http.get(url).success(function(data) {
-        			scope.searchResults = myFilter(data, scope.searchText);
+				orgSearchProvider.search(scope.searchText, function(data) {
+        			scope.searchResults = data;
 					
 					var l = scope.searchResults.length;
 					if (l == 0) {
@@ -63,11 +41,6 @@ app.directive("tutorialDatapicker", function($http,totoProvider) {
 						scope.state = '';
 					}
     			});
-				/* Errors have to be handled with
-					.error(function(a,b,c,d) {
-						...
-					})
-				*/
 			};
 
 			scope.clearStateFn = function() {
