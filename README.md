@@ -14,7 +14,7 @@ My personal objective when writing this tutorial was to see how AngularJS can be
 * it could be a list of countries
 * or some other sort of data with a very high number of items
 
-Typically, a dropdown list is used when the number of items is small. For large lists, you will have to search for your data.
-
-This is topic of this tutorial: to explore how a search "widget" can be implemented with AngularJS.
+Typically, a dropdown list is used when the number of items is small. For large lists,
+you will have to search for your data.  
+This is the *topic of this tutorial*: to explore how a search "widget" embeddable in a simple form can be implemented with AngularJS.
 
