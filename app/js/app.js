@@ -1,7 +1,7 @@
 var app = angular.module("data-picker-tutorial", []);
 
-app.factory('totoProvider', [function() {
-	return new TotoProvider();
+app.factory('totoProvider', ["$http",function($http) {
+	return new TotoProvider($http);
 }]);
 
 app.directive("tutorialDatapicker", function($http,totoProvider) {
