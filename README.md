@@ -19,4 +19,14 @@ you will have to search for your data. This is the *topic of this tutorial*: to 
 
 
 First step
-setup form page, basic js file
+----------
+In the first step, we setup a project folder, create an HTML page and a basic AngularJS
+application.
+To view of this tutorial please clone this tutorial with
+
+    git clone https://github.com/adelinor/angular-data-picker-tutorial.git
+
+Afterwards, check out the branch step01 to view the code for the first step:
+
+    git checkout step01
+
