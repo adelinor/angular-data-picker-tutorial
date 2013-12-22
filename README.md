@@ -31,6 +31,7 @@ Afterwards, check out the branch step01 to view the code for the first step:
 In the first step, we setup a project folder, and three files: one for the HTML page, one
 for the AngularJS code and one for a mock JSON message that simulates a call to the
 backend.
+```
      +
      |
      +- app/
@@ -44,7 +45,8 @@ backend.
      +- messages/
          |
          +- search-orgs.js
-jjj
+```
+
 First we build a message that emulates the results returned by a backend implementation. The file `search-orgs.js` contains only two items:
 
 ```js
@@ -108,6 +110,6 @@ function OrgsListCtrl($scope, $http) {
 
 Now open the index.html page and you should see the list of organisations displayed:
 
-[Screenshot of expecte output](site/step01.png) .
+![Screenshot of expected output](site/step01.png) .
 
 Et voilà, that's it for the first step.
