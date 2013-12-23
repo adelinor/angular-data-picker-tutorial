@@ -73,7 +73,6 @@ Then we create the index.html page:
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 	<script src="js/controllers.js"></script>
 </head>
-<body>
 
 ```
 
@@ -81,9 +80,11 @@ The head section links to the [Bootstrap CSS framework](http://getbootstrap.com)
 AngularJS version 1.0.8.
 The `html` tag contains the attribute `ng-app` to let AngularJS know that this HTML page contains an AngularJS application.
 
-To test this setup, we want to display the data from search org message. For that purpose we use AngularJS's ng-repeat:
+To test this setup, we want to display the data from search org message. We use
+AngularJS's ng-repeat, so here is the rest of the index.html file:
 
 ```html
+<body>
 <h2>Let's test stuff</h2>
 <p>
 <ul ng-controller="OrgsListCtrl">
@@ -92,6 +93,8 @@ To test this setup, we want to display the data from search org message. For tha
 	</li>
 </ul>
 </p>
+</body>
+</html>
 ```
 
 A controller, OrgsListCtrl, is declared in the `ul` element. This allows to fetch data and
