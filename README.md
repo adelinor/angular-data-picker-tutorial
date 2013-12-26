@@ -20,11 +20,12 @@ you will have to search for your data. This is the *topic of this tutorial*: to 
 
 First step
 ----------
-To view of this tutorial please clone this tutorial with
+All the necessary code is provided below to complete this tutorial.
+Alternatively, you can retrieve it from Github. Using your git client, get this tutorial with
 
     git clone https://github.com/adelinor/angular-data-picker-tutorial.git
 
-Afterwards, check out the branch step01 to view the code for the first step:
+Afterwards, check out the branch *step01* to get the code for the completed first step:
 
     git checkout step01
 
@@ -47,7 +48,7 @@ backend.
          +- search-orgs.js
 ```
 
-First we build a message that emulates the results returned by a backend implementation. The file `search-orgs.js` contains only two items:
+First we build a message that emulates the results returned by a backend implementation. The file *search-orgs.js* contains only two items:
 
 ```js
 [
@@ -62,7 +63,7 @@ First we build a message that emulates the results returned by a backend impleme
 ]
 ```
 
-Then we create the index.html page:
+Then we create the *index.html* page:
 
 ```html
 <html lang="en" ng-app>
@@ -81,7 +82,7 @@ AngularJS version 1.0.8.
 The `html` tag contains the attribute `ng-app` to let AngularJS know that this HTML page contains an AngularJS application.
 
 To test this setup, we want to display the data from search org message. We use
-AngularJS's ng-repeat, so here is the rest of the index.html file:
+AngularJS's ng-repeat, so here is the rest of the *index.html* file:
 
 ```html
 <body>
@@ -100,7 +101,8 @@ AngularJS's ng-repeat, so here is the rest of the index.html file:
 A controller, OrgsListCtrl, is declared in the `ul` element. This allows to fetch data and
 store in the `scope` to make it available. In the `li` we iterate through the search results using the `ng-repeat` directive.
 
-The controller is written with a simple function as shown in the
+In the file *controllers.js* file, the controller is written with a simple function
+as shown in the
 [Angular tutorial step 5](http://docs.angularjs.org/tutorial/step_05). We use the out of
 the box `$http` service to invoke the search. The result of the search is stored in the scope under the name `searchResults`.
 ```js
@@ -111,7 +113,8 @@ function OrgsListCtrl($scope, $http) {
 }
 ```
 
-Now open the index.html page and you should see the list of organisations displayed:
+Now open the *index.html* page with your browser and you should see the list of
+organisations displayed:
 
 ![Screenshot of expected output](site/step01.png) .
 
