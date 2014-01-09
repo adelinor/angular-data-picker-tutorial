@@ -119,3 +119,39 @@ organisations displayed:
 ![Screenshot of expected output](site/step01.png) .
 
 Et voilà, that's it for the first step.
+
+Second step
+-----------
+We are now going to start developing a form for entering people. To keep it as simple
+as possible, we only enter a free text for the name of a person.
+
+You can the code that completes this step by checking out the branch *step02*:
+
+    git checkout step02
+
+We start editing the file *index.html*. We replace the body content by a form to add persons:
+
+```html
+<body>
+<h1>People</h1>
+
+<h2>Add new</h2>
+<div>
+<form class="form-inline" role="form">
+        <div class="form-group">
+                <label for="personName" class="sr-only">Name</label>
+                <input type=text" class="form-control" id="personName"
+                         placeholder="Enter name">
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+
+<h2>Already registered</h2>
+<ul>
+        <li>A recorded name <a href="#">edit</a></li>
+</ul>
+</div>
+</body>
+```
+
