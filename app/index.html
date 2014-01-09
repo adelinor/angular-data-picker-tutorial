@@ -8,13 +8,27 @@
 	<script src="js/controllers.js"></script>
 </head>
 <body>
-<h2>Let's test stuff</h2>
-<p>
-<ul ng-controller="OrgsListCtrl">
-	<li ng-repeat="org in searchResults">
-		{{org.displayName}}
+<h1>People</h1>
+
+<h2>Add new</h2>
+<div ng-controller="PeopleCtrl">
+<form ng-submit="addPerson()" class="form-inline" role="form">
+	<div class="form-group">
+		<label for="personName" class="sr-only">Name</label>
+		<input type=text" class="form-control" id="personName"
+			 placeholder="Enter name"
+		     ng-model="personNameNG">
+	</div>
+	<button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+
+<h2>Already registered</h2>
+<ul>
+	<li ng-repeat="p in people">
+		{{p.name}} <a ng-click="editById(p.id)" href="#{{p.id}}">edit</a>
 	</li>
 </ul>
-</p>
+</div>
 </body>
 </html>
