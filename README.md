@@ -136,7 +136,6 @@ We start editing the file *index.html*. We replace the body content by a form to
 <h1>People</h1>
 
 <h2>Add new</h2>
-<div>
 <form class="form-inline" role="form">
         <div class="form-group">
                 <label for="personName" class="sr-only">Name</label>
@@ -151,7 +150,12 @@ We start editing the file *index.html*. We replace the body content by a form to
 <ul>
         <li>A recorded name <a href="#">edit</a></li>
 </ul>
-</div>
 </body>
 ```
+This form which renders has shown below, simply captures a name and shows
+under the section with title 'Already registered'. An edit link is added to allow editing
+the name.
+
+![Simple form for adding person](site/step02_form.png) .
+
 
