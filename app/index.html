@@ -7,28 +7,30 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 	<script src="js/controllers.js"></script>
 </head>
-<body>
+<body style="padding: 1em;">
 <h1>People</h1>
 
-<h2>Add new</h2>
-<div ng-controller="PeopleCtrl">
-<form ng-submit="addPerson()" class="form-inline" role="form">
+<form class="form col-xs-6" role="form">
+<fieldset>
+	<legend>Add person</legend>
 	<div class="form-group">
-		<label for="personName" class="sr-only">Name</label>
-		<input type=text" class="form-control" id="personName"
-			 placeholder="Enter name"
-		     ng-model="personNameNG">
+		<label class="control-label" for="personName">Name</label>
+		<input type=text" class="form-control" id="personName" placeholder="Enter name">
 	</div>
 	<button type="submit" class="btn btn-primary">Add</button>
+</fieldset>
 </form>
 
-
-<h2>Already registered</h2>
-<ul>
-	<li ng-repeat="p in people">
-		{{p.name}} <a ng-click="editById(p.id)" href="#{{p.id}}">edit</a>
-	</li>
+<div class="col-xs-6">
+<fieldset>
+	<legend>Already registered</legend>
+	<ul>
+		<li>A recorded name
+			<a href="#">edit</a>
+        </li>
 </ul>
+</fieldset>
 </div>
+
 </body>
 </html>
