@@ -123,38 +123,62 @@ Et voilà, that's it for the first step.
 Second step
 -----------
 We are now going to start developing a form for entering people. To keep it as simple
-as possible, we only enter a free text for the name of a person.
+as possible, we only enter one free text field for a person in this step.
 
-You can the code that completes this step by checking out the branch *step02*:
+You can get the code that completes this step by checking out the branch *step02*:
 
     git checkout step02
 
-We start editing the file *index.html*. We replace the body content by a form to add persons:
+So, let's start editing the file *index.html*.
+
+Let's add a bit of padding around the page:
+```html
+<body style="padding: 1em;">
+```
+
+Let's remove all content that was there previously within the body tag and add
+the HTML elements for the People editor.
+
+We start with a title:
+```html
+<h1>People</h1>
+```
+
+We add the form container, the CSS class indicates to only use half of the width (6 columns out of 12):
+```html
+<form class="form col-xs-6" role="form">
+</form>
+```
+
+Within the `form` element we add the input for the person:
+```html
+<fieldset>
+	<legend>Add person</legend>
+	<div class="form-group">
+		<label class="control-label" for="personName">Name</label>
+		<input type=text" class="form-control" id="personName" placeholder="Enter name">
+	</div>
+	<button type="submit" class="btn btn-primary">Add</button>
+</fieldset>
+```
+
+At the same time we want to display the list of people who have been registered already
+and provide a link to allow to edit an existing record.
+For that purpose, we add a `div` container after the `</form>` closing tag. Its CSS class tells to occupy half of the display (6 columns out of 12):
 
 ```html
-<body>
-<h1>People</h1>
-
-<h2>Add new</h2>
-<form class="form-inline" role="form">
-        <div class="form-group">
-                <label for="personName" class="sr-only">Name</label>
-                <input type=text" class="form-control" id="personName"
-                         placeholder="Enter name">
-        </div>
-        <button type="submit" class="btn btn-primary">Add</button>
-</form>
-
-
-<h2>Already registered</h2>
-<ul>
-        <li>A recorded name <a href="#">edit</a></li>
+<div class="col-xs-6">
+<fieldset>
+	<legend>Already registered</legend>
+	<ul>
+		<li>A recorded name
+			<a href="#">edit</a>
+        </li>
 </ul>
-</body>
+</fieldset>
+</div>
 ```
-This form which renders has shown below, simply captures a name and shows
-under the section with title 'Already registered'. An edit link is added to allow editing
-the name.
+This form which has no behaviour for the moment, renders as shown below:
 
 ![Simple form for adding person](site/step02_form.png) .
 
