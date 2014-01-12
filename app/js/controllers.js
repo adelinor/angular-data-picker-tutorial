@@ -22,4 +22,8 @@ function PeopleCtrl($scope, $http) {
 			} );
 		$scope.personNameNG = '';
 	};
+
+	$scope.editById = function(id) {
+		alert('You want to edit person with ID=' + id);
+	}
 };

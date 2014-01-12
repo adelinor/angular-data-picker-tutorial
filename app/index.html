@@ -27,7 +27,7 @@
 	<legend>Already registered</legend>
 	<ul>
 		<li ng-repeat="p in people">
-			{{p.name}} <a href="#">edit</a>
+			{{p.name}} <a ng-click="editById(p.id)" href="#">edit</a>
 		</li>
 	</ul>
 </fieldset>
