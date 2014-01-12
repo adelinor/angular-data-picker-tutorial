@@ -7,15 +7,16 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 	<script src="js/controllers.js"></script>
 </head>
-<body style="padding: 1em;">
+<body style="padding: 1em;" ng-controller="PeopleCtrl">
 <h1>People</h1>
 
-<form class="form col-xs-6" role="form">
+<form ng-submit="addPerson()" class="form col-xs-6" role="form">
 <fieldset>
 	<legend>Add person</legend>
 	<div class="form-group">
 		<label class="control-label" for="personName">Name</label>
-		<input type=text" class="form-control" id="personName" placeholder="Enter name">
+		<input type=text" class="form-control" id="personName" placeholder="Enter name"
+			ng-model="personNameNG">
 	</div>
 	<button type="submit" class="btn btn-primary">Add</button>
 </fieldset>

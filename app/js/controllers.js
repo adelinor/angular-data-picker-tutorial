@@ -22,14 +22,4 @@ function PeopleCtrl($scope, $http) {
 			} );
 		$scope.personNameNG = '';
 	};
-
-	$scope.editById = function(id) {
-		alert('You want to edit person with ID=' + id);
-		/* This needs to somehow refresh the model for the Edit form
-		 * which should then change the title, label, prepopulate the form fields
-		 * and setup the label on the button
-		 * the callback would need to behave in a different way: the entire object
-		 * needs to be passed, if no ID, create it. Otherwise update existing.
-		 */
-	}
-}
+};
