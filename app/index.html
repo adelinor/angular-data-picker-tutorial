@@ -26,10 +26,10 @@
 <fieldset>
 	<legend>Already registered</legend>
 	<ul>
-		<li>A recorded name
-			<a href="#">edit</a>
-        </li>
-</ul>
+		<li ng-repeat="p in people">
+			{{p.name}} <a href="#">edit</a>
+		</li>
+	</ul>
 </fieldset>
 </div>
 
