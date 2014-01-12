@@ -180,6 +180,94 @@ For that purpose, we add a `div` container after the `</form>` closing tag. Its 
 ```
 This form which has no behaviour for the moment, renders as shown below:
 
-![Simple form for adding person](site/step02_form.png) .
+![Simple form for adding person](site/step02_form.png) 
 
+Now let's add some basic behaviour: clicking "add" will register the person. Clicking "edit" will bring a popup to indicate what person is edited. All data is saved in memory.
 
+With AngularJS, HTML elements with behaviour must be under the supervision of a controller.
+To do so we add a `ng-controller` declaration in the body element:
+
+```html
+<body style="padding: 1em;" ng-controller="PeopleCtrl">
+```
+
+We also add a declaration on the text input for the person's name: this is to bind the input to the model. We give the attribute name of `personNameNG`.
+
+```html
+<input type=text" class="form-control" id="personName" placeholder="Enter name"
+	ng-model="personNameNG">
+```
+
+When the form is submitted we want a person to be added so we add the `ng-submit`
+declaration to the form element:
+
+```html
+<form ng-submit="addPerson()" class="form col-xs-6" role="form">
+```
+
+At the end of the file *controllers.js* we add a new controller and define the function
+addPerson(). Please note that the function is defined in the object `$scope` which is
+visible in child HTML elements of the ng-controller.
+
+```js
+function PeopleCtrl($scope, $http) {
+	$scope.addPerson = function() {
+		alert('You are adding a person with name=' + $scope.personNameNG);
+	};
+};
+```
+
+Test it now!! You should see a pop up when clicking on add.
+
+We now add to the controller an array for the persons added. The
+addPerson function is changed to push objects to that array:
+
+```js
+function PeopleCtrl($scope, $http) {
+	$scope.people = [];
+
+	$scope.addPerson = function() {
+		var pos = $scope.people.length;
+		$scope.people.push(
+			{
+				id: pos,
+				name:$scope.personNameNG
+			} );
+		$scope.personNameNG = '';
+	};
+};
+```
+
+With this implementation, adding people does not provide feedback anywhere. We
+now need to show the registered people. The `ng-repeat` declaration is used
+in the *index.html* for that. The `li` element below: 
+
+```html
+	<li>A recorded name
+		<a href="#">edit</a>
+	</li>
+```
+is replaced with:
+
+```html
+	<li ng-repeat="p in people">
+		{{p.name}} <a href="#">edit</a>
+	</li>
+```
+
+To add behaviour to the edit link, we use a `ng-click` declaration on the hyperlink:
+
+```html
+<a ng-click="editById(p.id)" href="#">edit</a>
+```
+
+This will invoke the function editById and provide the id to edit as an argument.
+This function needs to be added to the controller:
+
+```js
+$scope.editById = function(id) {
+	alert('You want to edit person with ID=' + id);
+}
+```
+
+And this concludes the second step :(
