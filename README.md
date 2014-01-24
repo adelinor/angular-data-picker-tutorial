@@ -430,6 +430,7 @@ is:
 	"submitButton.create" : "Add",
 	"submitButton.edit" : "Apply"
 }
+```
 
 To distinguish what is mode in which the form is employed, we create a new variable
 in the `$scope` for the form mode. Also we need to load the labels in the controller.
