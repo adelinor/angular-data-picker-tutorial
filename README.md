@@ -1,5 +1,5 @@
-angular-data-picker-tutorial
-============================
+This tutorial
+=============
 
 Audience
 --------
@@ -19,7 +19,7 @@ you will have to search for your data. This is the *topic of this tutorial*: to 
 
 
 First step
-----------
+==========
 All the necessary code is provided below to complete this tutorial.
 Alternatively, you can retrieve it from Github. Using your git client, get this tutorial with
 
@@ -121,7 +121,7 @@ organisations displayed:
 Et voilà, that's it for the first step.
 
 Second step
------------
+===========
 We are now going to start developing a form for entering people. To keep it as simple
 as possible, we only enter one free text field for a person in this step.
 
@@ -271,3 +271,209 @@ $scope.editById = function(id) {
 ```
 
 And this concludes the second step :(
+
+Third step
+==========
+We are now going to expand what was done in the previous step:
+1. The form will bind to a person object instead of binding to an input field directly to avariable of type `String`.
+2. We will add new fields to form
+3. We will implement the edit behaviour to repopulate the form from existing data
+4. The title of the form will show Edit in edit mode or Add when adding a new record
+
+Form binds to one object
+------------------------
+We want to bind the entire form to an object called `person` which will be in the scope of the controller.
+AngularJS allows to use a dotted notation in the `ng-model` attribute for binding to a
+member of an object directly. We update the `ng-model` attribute in the the *index.html*
+file from `ng-model="personNameNG"` to `ng-model="person.name"`. 
+
+The implementation of the controller `PeopleCtrl` actually becomes simpler
+```js
+	//form binds directly to object $scope.person
+	$scope.addPerson = function() {
+		var pos = $scope.people.length;
+
+		//Assign id
+		$scope.person.id = pos;
+
+		$scope.people.push( $scope.person );
+
+		//Reset form data via the bound object
+		$scope.person = {};
+	};
+};
+```
+
+Adding new fields to the form
+-----------------------------
+The beauty of binding the entire form to an object is that you can modify the form content
+without having to modify the controller logic. We only need to update the *index.html*
+file for adding the new form elements:
+* workAddress : the work address details. This will be the subject of later steps
+* tel : a simple String
+* mail : a string for the e-mail address
+
+```html
+	<!-- Add this after the block for the personName -->
+	<div class="form-group">
+		<label for="workAddress">Company</label>
+		<!-- No input yet -->
+	</div>
+	<div class="form-group">
+		<label for="tel">Tel</label>
+		<input type=text" class="form-control" id="tel"
+			 placeholder="+44 123 456 789"
+		     ng-model="person.tel">
+	</div>
+	<div class="form-group">
+		<label for="mail">E-mail</label>
+		<input type=text" class="form-control" id="mail"
+			 placeholder="bertrand@studio.com"
+		     ng-model="person.mail">
+	</div>
+```
+
+Implement the edit
+------------------
+Clicking the edit link invokes the `editById` function in the scope which currently
+only displays an alert message. 
+
+Now we want this function to populate the form from an object. In reality this would
+trigger a call to a backend to fetch the data to edit. Here we look for the object in
+memory. For that reason, we make a copy as otherwise updates would take effect even
+if the user does not click save.
+
+```js
+	$scope.editById = function(id) {
+		var pList = $scope.people;
+		var i=0, len=pList.length;
+		var p = null, item = null;
+
+		for (; p == null && i < len; i++) {
+			item = pList[i];
+			if (item.id === id) {
+				//p = item;
+				//We edit a copy
+				p = angular.copy(item);
+			}
+		}
+		$scope.person = p;
+	}
+```
+
+You only assign a new object to the person variable in `$scope` and AngularJS
+binds automatically to the form.
+
+This is all good but when the user clicks "Add" a new object will be added as new.
+We therefore need to adapt the `addPerson` function. We will check if the data has
+an ID: if it has, we will interpret the submission as an Edit, otherwise as a Create.
+This is the code of the amended function:
+
+```js
+	$scope.addPerson = function() {
+		if (typeof $scope.person.id == 'undefined' ) {
+			var pos = $scope.people.length;
+			$scope.person.id = pos;
+			$scope.people.push( $scope.person );
+
+		} else {
+			//Replace object in list
+			var id = $scope.person.id;
+			var pList = $scope.people;
+			var i=0, len=pList.length, notReplaced = true;
+
+			for (; notReplaced && i < len; i++) {
+				if (pList[i].id === id) {
+					pList[i] = $scope.person;
+					notReplaced = false;
+				}
+			}
+		}
+
+		//Reset form data via the bound object
+		$scope.person = {};
+	};
+```
+
+Adapt labels to differiente between Edit and Create modes
+---------------------------------------------------------
+The form is now functional: it allows to add entries and edit exising ones. In terms
+of usability it is not yet complete: the labels __Add person__, for the form, and
+__Add__, for the submit button, are misleading in Edit mode.
+
+For that we create a new file *labels.js* at the same level as *index.html*:
+
+```
+     +
+     |
+     +- app/
+     |   |
+     |   +- index.html
+     |   |
+     |   +- labels.js
+     |   |
+     |   +- js/
+     |       |
+     |       +- controllers.js
+     |
+     +- messages/
+         |
+         +- search-orgs.js
+```
+This file will store labels in a Javascript object literal (JSON). The content of the file
+is:
+
+```js
+{
+	"formTitle.create" : "Add person",
+	"formTitle.edit" : "Edit person",
+	"submitButton.create" : "Add",
+	"submitButton.edit" : "Apply"
+}
+
+To distinguish what is mode in which the form is employed, we create a new variable
+in the `$scope` for the form mode. Also we need to load the labels in the controller.
+At the top of the `PeopleCtrl` we therefore add:
+
+
+```js
+	//Form is by default in create mode
+	$scope.formMode = 'create';
+
+	//Load labels
+	$http.get('labels.js').success(function(data) {
+		$scope.LABEL = data;
+	});
+```
+
+
+At the end of the `$scope.addPerson` function, we reset the mode to 'create':
+```js
+	//Reset form data via the bound object
+	$scope.person = {};
+	$scope.formMode = 'create';
+```
+
+When entering the `editById` function we set the mode to edit:
+
+The best way would be to use labels in an externalized resource
+```js
+	$scope.editById = function(id) {
+		$scope.formMode = 'edit';
+		// rest as before ...
+```
+
+To finish we need to update the *index.html* file to replace the hard coded labels by
+expressions an access to the `LABEL` table based on the formMode:
+
+```html
+<fieldset>
+	<legend>{{LABEL['formTitle.'+formMode]}}</legend>
+
+	<!-- ... -->
+
+	<button type="submit" class="btn btn-primary">{{LABEL['submitButton.'+ formMode]}}</button>
+</fieldset>
+```
+
+And that concludes the third step :)
