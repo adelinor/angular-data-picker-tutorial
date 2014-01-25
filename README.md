@@ -395,8 +395,8 @@ This is the code of the amended function:
 	};
 ```
 
-Adapt labels to differiente between Edit and Create modes
----------------------------------------------------------
+Adapt labels to differentiate between Edit and Create
+-----------------------------------------------------
 The form is now functional: it allows to add entries and edit exising ones. In terms
 of usability it is not yet complete: the labels __Add person__, for the form, and
 __Add__, for the submit button, are misleading in Edit mode.
