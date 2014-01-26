@@ -11,7 +11,7 @@ function OrgsListCtrl($scope, $http) {
 //OrgsListCtrl.$inject = ['$scope', '$http'];
 
 function PeopleCtrl($scope, $http) {
-	//Form is by default in create mode
+    //Form is by default in create mode
     $scope.formMode = 'create';
 
     //Load labels
