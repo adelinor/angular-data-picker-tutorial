@@ -275,10 +275,18 @@ And this concludes the second step :(
 Third step
 ==========
 We are now going to expand what was done in the previous step:
+
 1. The form will bind to a person object instead of binding to an input field directly to avariable of type `String`.
+
 2. We will add new fields to form
+
 3. We will implement the edit behaviour to repopulate the form from existing data
+
 4. The title of the form will show Edit in edit mode or Add when adding a new record
+
+To view the code for the completed third step, run:
+
+   git checkout step03 
 
 Form binds to one object
 ------------------------
