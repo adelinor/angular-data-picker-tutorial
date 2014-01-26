@@ -286,7 +286,7 @@ We are now going to expand what was done in the previous step:
 
 To view the code for the completed third step, run:
 
-   git checkout step03 
+    git checkout step03 
 
 Form binds to one object
 ------------------------
@@ -465,7 +465,6 @@ At the end of the `$scope.addPerson` function, we reset the mode to 'create':
 
 When entering the `editById` function we set the mode to edit:
 
-The best way would be to use labels in an externalized resource
 ```js
 	$scope.editById = function(id) {
 		$scope.formMode = 'edit';
