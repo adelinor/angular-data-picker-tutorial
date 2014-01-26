@@ -12,7 +12,7 @@
 
 <form ng-submit="addPerson()" class="form col-xs-6" role="form">
 <fieldset>
-	<legend>Add person</legend>
+	<legend>{{LABEL['formTitle.'+formMode]}}</legend>
 	<div class="form-group">
 		<label class="control-label" for="personName">Name</label>
 		<input type=text" class="form-control" id="personName" placeholder="Enter name"
@@ -34,7 +34,7 @@
              placeholder="bertrand@studio.com"
              ng-model="person.mail">
     </div>
-	<button type="submit" class="btn btn-primary">Add</button>
+	<button type="submit" class="btn btn-primary">{{LABEL['submitButton.'+ formMode]}}</button>
 </fieldset>
 </form>
 

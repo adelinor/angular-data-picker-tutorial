@@ -11,6 +11,14 @@ function OrgsListCtrl($scope, $http) {
 //OrgsListCtrl.$inject = ['$scope', '$http'];
 
 function PeopleCtrl($scope, $http) {
+	//Form is by default in create mode
+    $scope.formMode = 'create';
+
+    //Load labels
+    $http.get('labels.js').success(function(data) {
+        $scope.LABEL = data;
+    });
+
 	$scope.people = [];
 	$scope.person = {};
 
@@ -39,9 +47,11 @@ function PeopleCtrl($scope, $http) {
 
 		//Reset form data via the bound object
 		$scope.person = {};
+		$scope.formMode = 'create';
 	};
 
 	$scope.editById = function(id) {
+		$scope.formMode = 'edit';
         var pList = $scope.people;
         var i=0, len=pList.length;
         var p = null, item = null;
