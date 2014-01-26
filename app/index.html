@@ -16,8 +16,24 @@
 	<div class="form-group">
 		<label class="control-label" for="personName">Name</label>
 		<input type=text" class="form-control" id="personName" placeholder="Enter name"
-			ng-model="personNameNG">
+			ng-model="person.name">
 	</div>
+	<div class="form-group">
+        <label for="workAddress">Company</label>
+        <!-- No input yet -->
+    </div>
+    <div class="form-group">
+        <label for="tel">Tel</label>
+        <input type=text" class="form-control" id="tel"
+             placeholder="+44 123 456 789"
+             ng-model="person.tel">
+    </div>
+    <div class="form-group">
+        <label for="mail">E-mail</label>
+        <input type=text" class="form-control" id="mail"
+             placeholder="bertrand@studio.com"
+             ng-model="person.mail">
+    </div>
 	<button type="submit" class="btn btn-primary">Add</button>
 </fieldset>
 </form>
