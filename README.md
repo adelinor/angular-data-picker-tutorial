@@ -539,7 +539,7 @@ attribute is set to corresponding value object if a value is selected.
 setting it as an attribute.
 
 
-Work bread down for creating the data picker directive
+Work break down for creating the data picker directive
 ------------------------------------------------------
 We will go through the following:
 
