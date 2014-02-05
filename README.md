@@ -116,7 +116,7 @@ function OrgsListCtrl($scope, $http) {
 Now open the *index.html* page with your browser and you should see the list of
 organisations displayed:
 
-![Screenshot of expected output](site/step01.png) .
+![Screenshot of expected output](site/step01.png)
 
 Et voilà, that's it for the first step.
 
@@ -485,3 +485,388 @@ expressions an access to the `LABEL` table based on the formMode:
 ```
 
 And that concludes the third step :)
+
+Fourth step
+===========
+
+In this step we will define a drop down list to allow a user to select a __work address__
+for
+a person. As a second objective for this step, we will make sure that the form
+does not need to be changed when something else than a drop down is used for picking
+up a work address. This step and the following ones, are the heart of this tutorial.
+
+For this, we use one of the great features of AngularJS: __directives__ . *A directive
+allows you to create your own HTML element or attribute and define the behaviour for
+it*. AngularJS makes use of this mechanism: for instance `ng-controller`,
+`ng-click` are themselves directives.
+The
+[reference documentation on directives](http://docs.angularjs.org/guide/directive) is
+very good and helpful.
+
+To view the code for the completed fourth step, run:
+
+    git checkout step04 
+
+Requirements
+------------
+These are the requirements to be satisfied in this step:
+
+- The drop down will populate an attribute of the object
+
+- The drop down is fed by a data provider. In flex this is done with:
+```flex
+    <mx:ComboBox dataProvider="{colorAC}"/>
+```
+Here we want to encapsulate the widget and the data provision aspect
+as an element `<org_data_picker>`
+so that the implementation of the widget can be replaced without affecting
+the form that uses it. For instance replacing a drop down by an autocomplete.
+
+- Whenever the form displays, the drop down is populated by querying a backend
+data provider for all possible "values". A value itself is an object of which a
+function transforms this object into a displayable text for the drop down
+
+- Binding is both ways: if the attribute to populate in the model is already populated,
+the drop down defaults to that value (if the present attribute value is not part of
+the drop down dataset, blank is shown). For this a function might be required to
+ compare two objects.
+
+- Whenever a user selects a value in the drop down, the attribute needs to be updated:
+attribute is set to null if blank is selected
+attribute is set to corresponding value object if a value is selected.
+
+- A transformation may need to be applied on the selected object (or null) before
+setting it as an attribute.
+
+
+Work bread down for creating the data picker directive
+------------------------------------------------------
+We will go through the following:
+
+1. Define the data picker directive 
+
+2. Implement directive with a drop down
+
+3. Populate drop down from backend call
+
+4. Define attributes to bind with form object
+
+5. Update model from view and update view from model
+
+
+Define the data picker directive
+--------------------------------
+
+As explained in the [reference documentation](http://docs.angularjs.org/guide/directive), 
+the name of a directive should be chosen to avoid clashes with potential new HTML
+ elements. `ng` is used as a prefix for all AngularJS directives.
+
+We go for `tutorial-datapicker`. We therefore edit the *index.html* file to add
+our directive element as a work address input field:
+
+```html
+	<div class="form-group">
+		<label for="workAddress">Company</label>
+		<tutorial-datapicker id="workAddress"></tutorial-datapicker>
+	</div>
+```
+
+This is nice but will have no effect until we declare this directive in AngularJS.
+The directive needs to be defined in a module which name is defined with `ng-app`.
+
+The code for declaring the application and directive goes to a new file *app.js*
+(create it empty for now):
+```
+     +
+     |
+     +- app/
+     |   |
+     |   +- index.html
+     |   |
+     |   +- labels.js
+     |   |
+     |   +- js/
+     |       |
+     |       +- app.js
+     |       |
+     |       +- controllers.js
+     |
+     +- messages/
+         |
+         +- search-orgs.js
+```
+
+We need to add *app.js* in the list of files required for the *index.html* page
+and at the same time we define an explicit name for the app:
+
+```html
+<!DOCTYPE html>
+<html lang="en" ng-app="data-picker-tutorial">
+<head>
+	<!-- head content unchanged, apart from additial line below ... -->
+	<script src="js/app.js"></script>
+</head>
+```
+
+In the *app.js* file we declare the application called `data-picker-tutorial`:
+
+```js
+var app = angular.module("data-picker-tutorial", []);
+```
+
+Using the `app` variable, we then declare the directive:
+
+```js
+app.directive("tutorialDatapicker", function($http) {
+	return {
+		restrict: "E",
+		scope: {
+			id: "@"
+		},
+		template: "Hello"
+	}
+});
+```
+
+Let's have a quick overview of this declaration:
+
+* the *normalized* name of the declarative `tutorialDatapicker` is in
+  *lowerCamelCase*. It is translated to *lower-camel-case* name in the HTML template
+  that uses it. This is is called matching a directive.
+
+* `restrict: "E"` is used to match the directive on an element name and only that
+
+* A directive template can have access to the parent scope, but the recommendation
+  is to have their own scope: called isolate scope. This is the purpose of the scope
+  `scope: { ... }` declaration.
+
+* `id: "@"` is equivalent to `id: "@id"` and means that we expect __a litteral__
+  as an attribute of name `id`.
+
+* the last declaration `template: ` is an inline piece of HTML that will be displayed
+for the directive.
+
+So let's run it and test it! You should see:
+
+![Directive displaying Hello](site/step04_hello.png)
+
+Implement directive with a drop down
+------------------------------------
+
+We now create an HTML file for the HTML code that will render the drop down 
+*tutorial-datapicker.html* as shown below:
+
+
+```
+     +
+     |
+     +- app/
+     |   |
+     |   +- index.html
+     |   |
+     |   +- labels.js
+     |   |
+     |   +- datapicker/
+     |   |   |
+     |   |   +- tutorial-datapicker.html
+     |   |
+     |   +- js/
+     |       |
+     |       +- app.js
+     |       |
+     |       +- controllers.js
+     |
+     +- messages/
+         |
+         +- search-orgs.js
+```
+
+In this file we only create an empty drop down for the time being and we use
+the id provided as parameter to make its name unique:
+
+```html
+<select class="form-control" name="dropDown_{{id}}">
+	<option value=""></option>
+</select>
+```
+
+And we update the directive to tell to use a template instead of inline HTML.
+In the *app.js* file, we replace the `template` attribute by `templateUrl`
+ as follows:
+
+```js
+templateUrl: "datapicker/tutorial-datapicker.html"
+```
+
+Test and you should see an empty drop down.
+
+![Directive displaying a dropdown](site/step04_empty_dropdown.png)
+
+Populate drop down from backend call
+------------------------------------
+
+The list of organisations retrieved in the first step is what is intended to
+populate the drop down. Fetching the list of organisations should be done
+ideally before the directive is rendered.
+
+Two kind of functions can be invoked in the context of a directive.
+
+* `function link(scope, element, attrs) { ... }` is used for directives that
+ manipulate the DOM
+
+* `function controller`. The guide indicates to use `controller` when wanting
+ to expose an API to other directives, or to use `link` otherwise.
+
+As this directive does not expose an API, we will use the `link` function.
+We modify the *app.js* file to add the function and the implementation
+(from the first step) to fetch the data.
+
+```js
+		templateUrl: "datapicker/tutorial-datapicker.html",
+		link: function(scope, el, attrs, ctrl) {
+			var url = '../messages/search-orgs.js';
+    		$http.get(url).success(function(data) {
+        		scope.searchResults = data;
+    		});
+			/* Errors have to be handled with
+					.error(function(a,b,c,d) {
+						...
+					})
+			*/
+		}
+```
+
+Now we fetch the data and we set it in the scope of the directive under the
+name *searchResults*.
+
+We now need to display the data. AngularJS offers a very useful
+directive called `ng-options` to help populate a drop down. So we update the
+*tutorial-datapicker.html* file as follows:
+
+```html
+<select class="form-control" name="dropDown_{{id}}" ng-model="selection"
+	ng-options="o.dn as o.displayName for o in searchResults">
+	<option value=""></option>
+</select>
+```
+
+There is also an `ng-model` attribute that tells the variable name to which
+the drop down binds to. We call this variable __selection__.
+ Without the presence of the ng-model attribute the drop down remains
+empty :( .
+
+Refresh the page and you should see the list of organisations.
+
+![Displaying a populated dropdown](site/step04_populated_dropdown.png)
+
+Define attributes to bind with form object
+------------------------------------------
+The data picker, implemented as a drop down in this step, is meant to populate
+an attribute within an object. We therefore define two parameters:
+
+* one for the object to be set. We want to retrieve a reference to the object
+  so we will use the `'='` notation.
+
+* one for the property name to update. This is a string so we use the '@' notation.
+
+We call the parameters respectively `bindObj` and `bindProp`. As for directives,
+names are normalized so in the HTML template the attributes will be called
+`bind-obj` and `bind-prop`. In the *app.js* file, we modify the scope object to
+include the two new parameters:
+
+```js
+		scope: {
+			id: '@',
+			bindObj: '=',
+			bindProp: '@'
+		},
+```
+
+In the *index.html* file we add the two attributes to the `tutorial-datapicker`
+element:
+
+```html
+	<tutorial-datapicker id="workAddress"
+			bind-obj="person"
+			bind-prop="workAddress"></tutorial-datapicker>
+```
+
+Update model from view and update view from model
+-------------------------------------------------
+Now the `PeopleController` controller updates the model (the form object) either
+by setting a blank new person or by setting a person object to edit. The view element
+for the work address binds to a variable called `selection`. How do we bridge
+the two models and update them from each other? 
+
+![Binding problem to solve](site/step04_binding_to_solve.png)
+
+The link function, a controller for the view element, has the knowledge
+of boths models that need to be connected. *The link function is invoked
+once only per use of the directive*. You can neverthless declare observers
+that will let you react on updates on both ends: an update to the 
+`selection` variable or to `person.workAddress`.
+
+![Binding problem to solve](site/step04_binding_a_solution.png)
+
+In the link function, the `scope` variable comes with a function called `$watch`
+for that purpose. We then update our link function implementation in the 
+*app.js* file to observe changes and apply them to the other hand:
+
+```js
+		link: function(scope, el, attrs, ctrl) {
+			// Start remains unchanged ...
+
+			// Add this at the end ....
+
+			// Update selection, updates object's property
+			scope.$watch('selection', function(val) {
+					var m;
+					for (var i = 0; (! m) &&
+							(i < scope.searchResults.length); i++) {
+						var c = scope.searchResults[i];
+						if (val === c.dn) {
+							m = c;
+						}
+					}
+					scope.bindObj[scope.bindProp] = m;
+				});
+
+			// Update bindObj, updates selection
+			scope.$watch('bindObj', function(value) {
+				scope.selection = undefined;
+				var sel = scope.bindObj[scope.bindProp];
+				if (sel) {
+					scope.selection = sel.dn;
+				}
+			});
+		}
+```
+
+The observer for the `selection` goes through the list of data that populates
+the drop down (stored as `scope.searchResults`) and assigns the matched object
+to the resulting property.
+
+The observer for the bound object simply updates `scope.selection` to reflect
+what is set.
+
+#### Please note
+All view elements bind directly to properties of the model using
+the `ng-model` directive. We would ideally use it instead of `bind-obj`and
+`bind-prop`.
+
+To conclude this step, we modify the "Already registered" section to display
+the work address. At the end of the *index.html* file, we add `<span>`
+element which shows only if the work address exists:
+
+```html
+	<li ng-repeat="p in people">
+		{{p.name}}
+		<span ng-show="p.workAddress">at {{p.workAddress.displayName}}</span>
+		<a ng-click="editById(p.id)" href="#">edit</a>
+	</li>
+```
+
+Now we can test: add a new person, edit it: the binding works both ways!
+
+![Binding both ways](site/step04_binding_impl.png)
+
