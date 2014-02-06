@@ -4,7 +4,7 @@ app.directive("tutorialDatapicker", function($http) {
 	return {
 		restrict: "E",
 		scope: {
-			id: "@",
+			id: '@',
 			bindObj: '=',
 			bindProp: '@'
 		},
