@@ -507,8 +507,7 @@ To view the code for the completed fourth step, run:
 
     git checkout step04 
 
-Requirements
-------------
+#### Requirements
 These are the requirements to be satisfied in this step:
 
 - The drop down will populate an attribute of the object
@@ -539,8 +538,7 @@ attribute is set to corresponding value object if a value is selected.
 setting it as an attribute.
 
 
-Work break down for creating the data picker directive
-------------------------------------------------------
+#### Work break down for creating the data picker directive
 We will go through the following:
 
 1. Define the data picker directive 
