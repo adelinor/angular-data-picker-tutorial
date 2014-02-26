@@ -906,12 +906,11 @@ To view the code for the completed fifth step, run:
 
 We will go through the following in this step:
 
-1. Add a text input and a search button to the datapicker directive
+1. Add a text input and a search button
 
-2. Activate the search by hitting the Return key on the text input
+2. Activate the search by hitting the Return key
 
-3. Implement search and populate drop down with search results: the drop
-   down will be empty at the start
+3. Implement search and populate drop down with results
 
 4. Show search results in a table
 
@@ -924,8 +923,8 @@ We will go through the following in this step:
 8. Show an error message when there are too many matches
 
 
-Add a text input and a search button to the datapicker directive
-----------------------------------------------------------------
+Add a text input and a search button
+------------------------------------
 We edit the *tutorial-datapicker.html* file, to add an input text and
 a search button. We use the Bootstap CSS styling to combine the two as
 a group.
@@ -958,15 +957,16 @@ Search button, you should get an alert message as follows:
 
 ![Clicking the search button](site/step05_click_search_button.png)
 
-Activate the search by hitting the Return key on the text input
----------------------------------------------------------------
+Activate the search by hitting the Return key
+---------------------------------------------
 With the application as it stands, hitting the Return key will submit
 the form which in turn will add a new record. __This is not the desired
 behaviour__.
 
-Thanks to EpokK on the group discussion about
+Thanks to [EpokK](http://stackoverflow.com/users/1875004/epokk) on the
+group discussion about
 [submit form on pressing enter](http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs)
-, the form submission can be stopped by invoking on the event:
+, the form submission can be stopped by invoking:
 `e.preventDefault();`. 
 
 For treating the return key as a trigger for the search, we add a listener
@@ -988,8 +988,8 @@ el.bind('keydown', triggerSearchFn);
 Hitting the return key on the text input brings now the alert message.
 
 
-Implement search and populate drop down with search results
------------------------------------------------------------
+Implement search and populate drop down with results
+----------------------------------------------------
 To implement the search, we encapsulate the logic that calls the backend.
 We therefore create a new file *backend-api.js* that we put in the *js* folder:
 
@@ -1058,7 +1058,7 @@ function OrgSearchProvider($http) {
 					.error(function(a,b,c,d) {
 						...
 					})
-				*
+				*/
 	}
 };
 ```
@@ -1071,7 +1071,7 @@ This file is then added to the header of the index.html page:
 
 The dependency is used in the *app.js* file by:
 
-1. Telling AngularJS the name of the dependency and how it is
+*  Telling AngularJS the name of the dependency and how it is
    created. Immediately after the `app` variable instanciation we
    add: 
 
@@ -1081,14 +1081,14 @@ app.factory('orgSearchProvider', ["$http",function($http) {
 }]);
 ```
 
-2. We inject the dependency in the directive itself by adding the
+*  We inject the dependency in the directive itself by adding the
    dependency name to the directive's function signature:
 
 ```js
 app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 ```
 
-3. The `searchFn` can now be implemented:
+*  The `searchFn` can now be implemented:
 
 ```js
 scope.searchFn = function() {
@@ -1099,7 +1099,7 @@ scope.searchFn = function() {
 
 ```
 
-4. To conclude the search implementation, we __delete the lines__
+*  To conclude the search implementation, we __delete the lines__
    that were retrieving the list of organisations at the start
    of the `link` function:
 
@@ -1108,6 +1108,20 @@ var url = '../messages/search-orgs.js';
 $http.get(url).success(function(data) {
 	scope.searchResults = data;
 });
+
+```
+
+*  Because now the `searchResults` is not necessarily defined, we need
+   to test for the existence first of `scope.searchResults` before
+   accessing `scope.searchResults.length`:
+
+```js
+// Update selection, updates object's property
+scope.$watch('selection', function(val) {
+		var m;
+		for (var i = 0; (! m) &&
+				scope.searchResults &&
+				(i < scope.searchResults.length); i++) {
 
 ```
 
@@ -1157,6 +1171,8 @@ scope.selectFn = function(dn) {
 ```
 
 Let's try it!
+
+![Search results in table](site/step05_result_table.png)
 
 Show selected search result and allow to unselect
 -------------------------------------------------
