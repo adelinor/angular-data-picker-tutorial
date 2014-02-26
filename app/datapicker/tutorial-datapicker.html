@@ -1,5 +1,30 @@
-<select class="form-control" name="dropDown_{{id}}" ng-model="selection"
-	ng-options="o.dn as o.displayName for o in searchResults">
-	<option value=""></option>
-</select>
+<div class="input-group">
+    <input type="text" placeholder="Search by name" class="form-control"
+        ng-model="searchText">
+    <span class="input-group-btn">
+        <button type="button" class="btn"
+                ng-click="searchFn()"
+            >Search</button>
+    </span>
+</div>
 
+<div class="panel"
+     style="margin-top: 1em;"
+     ng-show="searchResults && searchResults.length > 0">
+    <div class="panel-heading">Select one of the results ...</div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="o in searchResults">
+                <td><a href="#" ng-click="selectFn(o.dn)">{{o.displayName}}</a></td>
+                <td>{{o.postalAddress}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

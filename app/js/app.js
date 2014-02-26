@@ -1,6 +1,10 @@
 var app = angular.module("data-picker-tutorial", []);
 
-app.directive("tutorialDatapicker", function($http) {
+app.factory('orgSearchProvider', ["$http",function($http) {
+    return new OrgSearchProvider($http);
+}]);
+
+app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 	return {
 		restrict: "E",
 		scope: {
@@ -10,20 +14,29 @@ app.directive("tutorialDatapicker", function($http) {
 		},
 		templateUrl: "datapicker/tutorial-datapicker.html",
 		link: function(scope, el, attrs, ctrl) {
-			var url = '../messages/search-orgs.js';
-    		$http.get(url).success(function(data) {
-        		scope.searchResults = data;
-    		});
-			/* Errors have to be handled with
-					.error(function(a,b,c,d) {
-						...
-					})
-			*/
+			scope.searchFn = function() {
+				orgSearchProvider.search(scope.searchText, function(data) {
+        			scope.searchResults = data;
+    			});
+			};
+
+			var triggerSearchFn = function(e) {
+	    		if (e.keyCode == 13) { 
+   		     		e.preventDefault();
+       		 		scope.searchFn();
+    			}
+			};
+			el.bind('keydown', triggerSearchFn);
+
+			scope.selectFn = function(dn) {
+				scope.selection = dn;
+			};
 
 			// Update selection, updates object's property
 			scope.$watch('selection', function(val) {
 					var m;
 					for (var i = 0; (! m) &&
+							scope.searchResults &&
 							(i < scope.searchResults.length); i++) {
 						var c = scope.searchResults[i];
 						if (val === c.dn) {
