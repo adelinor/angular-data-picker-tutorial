@@ -891,3 +891,441 @@ We add a bit more data to the file that emulates a backend message
 }
 ]
 ```
+
+Fifth step
+==========
+In this step the drop down is replaced by a "data picker".
+The user searches the data. Results are displayed and the user
+selects one of the records. The user can unselect the chosen
+record and start the process again.
+
+To view the code for the completed fifth step, run:
+
+    git checkout step05 
+
+
+We will go through the following in this step:
+
+1. Add a text input and a search button to the datapicker directive
+
+2. Activate the search by hitting the Return key on the text input
+
+3. Implement search and populate drop down with search results: the drop
+   down will be empty at the start
+
+4. Show search results in a table
+
+5. Show selected search result and allow to unselect
+
+6. Manage the display state of the datapicker
+
+7. Show an error message when no match is found
+
+8. Show an error message when there are too many matches
+
+
+Add a text input and a search button to the datapicker directive
+----------------------------------------------------------------
+We edit the *tutorial-datapicker.html* file, to add an input text and
+a search button. We use the Bootstap CSS styling to combine the two as
+a group.
+
+```html
+<div class="input-group">
+	<input type="text" placeholder="Search by name" class="form-control"
+		ng-model="searchText">
+	<span class="input-group-btn">
+		<button type="button" class="btn"
+				ng-click="searchFn()"
+			>Search</button>
+	</span>
+</div>
+```
+
+In this element we bind to `searchText` to store the text for the search. On a
+click of the search button, we call the `searchFn()` function.
+
+We start with a barebone implementation of the search function in the
+*app.js* file, within the `link` function:
+```js
+scope.searchFn = function() {
+	alert('You are searching for ' + scope.searchText);
+};
+```
+
+Let's try it! Enter some text in the input text form and click on the
+Search button, you should get an alert message as follows:
+
+![Clicking the search button](site/step05_click_search_button.png)
+
+Activate the search by hitting the Return key on the text input
+---------------------------------------------------------------
+With the application as it stands, hitting the Return key will submit
+the form which in turn will add a new record. __This is not the desired
+behaviour__.
+
+Thanks to EpokK on the group discussion about
+[submit form on pressing enter](http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs)
+, the form submission can be stopped by invoking on the event:
+`e.preventDefault();`. 
+
+For treating the return key as a trigger for the search, we add a listener
+on the `keydown` event. If the key pressed is the return key, then we 
+perform the search. We add the following to the link function in the
+*app.js* file:
+
+```js
+var triggerSearchFn = function(e) {
+	if (e.keyCode == 13) { 
+		e.preventDefault();
+		scope.searchFn();
+	}
+};
+el.bind('keydown', triggerSearchFn);
+
+```
+
+Hitting the return key on the text input brings now the alert message.
+
+
+Implement search and populate drop down with search results
+-----------------------------------------------------------
+To implement the search, we encapsulate the logic that calls the backend.
+We therefore create a new file *backend-api.js* that we put in the *js* folder:
+
+```
+     +
+     |
+     +- app/
+     |   |
+     |   +- index.html
+     |   |
+     |   +- labels.js
+     |   |
+     |   +- datapicker/
+     |   |   |
+     |   |   +- tutorial-datapicker.html
+     |   |
+     |   +- js/
+     |       |
+     |       +- app.js
+     |       |
+     |       +- controllers.js
+     |       |
+     |       +- backend-api.js
+     |
+     +- messages/
+         |
+         +- search-orgs.js
+```
+
+In this new file, we implement a so called __functionality provider__ that
+can be injected as a dependency in the directive:
+
+```js
+function OrgSearchProvider($http) {
+	var myFilter = function(orgs, text) {
+		if (! text) {
+			return orgs;
+		}
+		text = text.toLowerCase();
+		if (! orgs) {
+			return [];
+		}
+		var result = [];
+		for(var i = 0; i < orgs.length; i++) {
+			var o = orgs[i];
+			var n = o.displayName;
+			if (n && (n.toLowerCase().indexOf(text) != -1)) {
+				result.push(o);
+			}
+		}
+		return result;
+	};
+
+	this.search = function(searchText, onSuccessFn) {
+		console.log('searching for ' + searchText);
+
+		//URL points to local list of organisations
+		var url = '../messages/search-orgs.js';
+ 		$http.get(url).success(function(data) {
+			//A filter is used because the message always
+			//returns the entire list of organisations
+        	var filtered = myFilter(data, searchText);
+			onSuccessFn(filtered);
+    	});
+				/* Errors have to be handled with
+					.error(function(a,b,c,d) {
+						...
+					})
+				*
+	}
+};
+```
+
+This file is then added to the header of the index.html page:
+```html
+	<script src="js/backend-api.js"></script>
+</head>
+```
+
+The dependency is used in the *app.js* file by:
+
+1. Telling AngularJS the name of the dependency and how it is
+   created. Immediately after the `app` variable instanciation we
+   add: 
+
+```js
+app.factory('orgSearchProvider', ["$http",function($http) {
+	return new OrgSearchProvider($http);
+}]);
+```
+
+2. We inject the dependency in the directive itself by adding the
+   dependency name to the directive's function signature:
+
+```js
+app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
+```
+
+3. The `searchFn` can now be implemented:
+
+```js
+scope.searchFn = function() {
+	orgSearchProvider.search(scope.searchText, function(data) {
+   		scope.searchResults = data;
+    });
+};
+
+```
+
+4. To conclude the search implementation, we __delete the lines__
+   that were retrieving the list of organisations at the start
+   of the `link` function:
+
+```js
+var url = '../messages/search-orgs.js';
+$http.get(url).success(function(data) {
+	scope.searchResults = data;
+});
+
+```
+
+Now, we test the app: the drop down is initially empty. After performing
+a search, the drop down is populated with organisations that contain
+the searched text.
+
+
+Show search results in a table
+------------------------------
+We edit the *tutorial-datapicker.html* file to remove the
+`<select> ... </select>` statement and introduce at the end a section
+to show the search results as a table:
+
+```html
+<div class="panel"
+     style="margin-top: 1em;"
+     ng-show="searchResults && searchResults.length > 0">
+	<div class="panel-heading">Select one of the results ...</div>
+	
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Address</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="o in searchResults">
+				<td><a href="#" ng-click="selectFn(o.dn)">{{o.displayName}}</a></td>
+				<td>{{o.postalAddress}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+```
+
+#### Please note
+... that this section only shows if the list of search results is not empty.
+Clicking on a search result will invoke the `selectFn` function. This
+function needs to be added to the *app.js* file under the `link` function:
+
+```js
+scope.selectFn = function(dn) {
+	scope.selection = dn;
+};
+```
+
+Let's try it!
+
+Show selected search result and allow to unselect
+-------------------------------------------------
+To do so, we add a new section to the *tutorial-datapicker.html* file.
+
+```html
+<div class="input-group" ng-show="selection">
+	<input type="text" class="form-control" readonly="readonly"
+			value="{{bindObj[bindProp].displayName}}">
+	<span class="input-group-btn">
+  		<button type="button" class="btn btn-default"
+			ng-click="unselectFn()">&times;</button>
+	</span>
+</div>
+```
+
+The expression with `ng-show="selection"` will only show this HTML
+block when the selection scope variable is set.
+
+This block shows a X to allow the user to clear the selection. This
+invokes `unselectFn`. This function is added to the *app.js* file:
+
+```js
+scope.unselectFn = function() {
+	scope.bindObj[scope.bindProp] = undefined;
+	scope.selection = undefined;
+};
+```
+
+This resets the value in the model to update and clears the `selection`.
+
+Let's test the application:
+
+* searching for a text, for instance ABC, brings search results
+* hitting the return key on the text input for searching data does not
+  submit the form
+* search results show in a table under the search text input
+* every row has an hyperlink allowing to select it
+* selecting a search result shows a new block
+* clicking on the X clears the selection
+
+But the following __undesireable__ behaviour can be seen:
+* Selecting a search result still leaves the search text input and
+  search results on display
+* Clearing the selection still displays the previous search text input
+  and search results
+
+Manage the display state of the datapicker
+------------------------------------------
+The only state information in the datapicker widget is provided
+by:
+* the `selection` variable: is it set or not?
+* the size of the search results: empty or not?
+
+The flow of use of the widget for an empty fields is as follows:
+1) Show the search text input (and the search button)
+- The input text has to be blank
+- No search results are shown
+- No selection box is shown
+
+2) User enters text and searches:
+- The input text shows the text entered by the user
+- Search results table shows
+- No selection box is shown
+
+3) The user selects a record:
+- The input text disappears
+- Search results table disappears
+- The selection box is shown
+
+The only transition possible out of state 3) is unselect this takes the
+user back to 1)
+
+When editing an already assigned value, the initial state is 3)
+
+From state 2) the user can only update the text and search again:
+the user remains in the same state.
+
+In state 1), the content of `selection` is empty and `searchResults` is empty
+In state 2), the content of `selection` is empty and `searchResults`
+will be an array 
+In state 3), the content of `selection` is set and `searchResults` is empty
+
+To resolve the problems, we amend `selectFn` to additionally clear
+the `searchResults` and blank the `searchText`.
+
+```js
+scope.selectFn = function(dn) {
+	scope.selection = dn;
+	scope.searchResults = undefined;
+	scope.searchText = '';
+};
+```
+
+We also need to hide the search box when there is a selection. This is done
+by adding a ng-show attribute:
+
+```html
+<div class="input-group" ng-show="! selection">
+	<input type="text" placeholder="Search by name" class="form-control"
+		ng-model="searchText">
+```
+
+Now the datapicker should behave as expected.
+
+Show an error message when no match is found
+--------------------------------------------
+When there are no results for a search, we have to tell this information
+back to the user.
+
+Immediately after the div element showing the search input text (i.e.
+`<div class="input-group" ng-show="! selection">`), we add a block for
+the error message:
+
+```html
+<p class="help-block has-error"
+   ng-show="searchResults && searchResults.length == 0">No results found
+   for the provided criteria</p>
+```
+
+Show an error message when there are too many matches
+-----------------------------------------------------
+To allow limiting the number of search results, we add a new parameter
+to the directive:
+
+```js
+scope: {
+	// ...
+	searchSizeLimit: '@'
+},
+```
+
+We also set a limit in the `tutorial-datapicker` element in the *index.html*:
+
+```html
+	<tutorial-datapicker search-size-limit="5">
+```
+
+We now modify the success search function to compare the
+number of results with the size limit. This only happens when the limit
+is defined.
+
+The search results handling code becomes:
+
+```js
+scope.searchFn = function() {
+	orgSearchProvider.search(scope.searchText, function(data) {
+		var l = data.length;
+		scope.searchLimitExceeded = (scope.searchSizeLimit
+			&& l > scope.searchSizeLimit);
+
+		//Reduce the number of results to the limit
+		if (scope.searchLimitExceeded) {
+   			scope.searchResults = data.slice(0,scope.searchSizeLimit);
+
+		} else {
+   			scope.searchResults = data;
+		}
+   	});
+};
+
+```
+
+After the block for the "no search results" error, we add the warning
+block for the search size limit exceeded:
+
+```html
+<p class="help-block has-warning"
+   ng-show="searchLimitExceeded">Number of results exceeds limit,
+   please refine criteria</p>
+```
+
