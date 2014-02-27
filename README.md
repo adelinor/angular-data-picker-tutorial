@@ -1170,7 +1170,7 @@ scope.selectFn = function(dn) {
 };
 ```
 
-Let's try it!
+Let's try it! Type abc and search ...
 
 ![Search results in table](site/step05_result_table.png)
 
@@ -1189,11 +1189,13 @@ To do so, we add a new section to the *tutorial-datapicker.html* file.
 </div>
 ```
 
-The expression with `ng-show="selection"` will only show this HTML
-block when the selection scope variable is set.
+The expression `ng-show="selection"` makes this HTML
+block appear, only when the `selection` variable is set in the scope.
+A button with X as a label, allows the user to clear the selection. Clicking
+it invokes the `unselectFn` function.
 
-This block shows a X to allow the user to clear the selection. This
-invokes `unselectFn`. This function is added to the *app.js* file:
+The `unselectFn` function is added to the *app.js* file within the `link`
+function:
 
 ```js
 scope.unselectFn = function() {
@@ -1228,33 +1230,33 @@ by:
 * the size of the search results: empty or not?
 
 The flow of use of the widget for an empty fields is as follows:
-1) Show the search text input (and the search button)
-- The input text has to be blank
-- No search results are shown
-- No selection box is shown
+1.  Show the search text input (and the search button)
+    - The input text has to be blank
+    - No search results are shown
+    - No selection box is shown
 
-2) User enters text and searches:
-- The input text shows the text entered by the user
-- Search results table shows
-- No selection box is shown
+2.  User enters text and searches:
+    - The input text shows the text entered by the user
+    - Search results table shows
+    - No selection box is shown
 
-3) The user selects a record:
-- The input text disappears
-- Search results table disappears
-- The selection box is shown
+3.  The user selects a record:
+    - The input text disappears
+    - Search results table disappears
+    - The selection box is shown
 
-The only transition possible out of state 3) is unselect this takes the
-user back to 1)
+The only transition possible out of state [3.] is unselect this takes the
+user back to [1.]
 
-When editing an already assigned value, the initial state is 3)
+When editing an already assigned value, the initial state is [3.]
 
-From state 2) the user can only update the text and search again:
+From state [2.] the user can only update the text and search again:
 the user remains in the same state.
 
-In state 1), the content of `selection` is empty and `searchResults` is empty
-In state 2), the content of `selection` is empty and `searchResults`
+In state [1.], the content of `selection` is empty and `searchResults` is empty
+In state [2.], the content of `selection` is empty and `searchResults`
 will be an array 
-In state 3), the content of `selection` is set and `searchResults` is empty
+In state [3.], the content of `selection` is set and `searchResults` is empty
 
 To resolve the problems, we amend `selectFn` to additionally clear
 the `searchResults` and blank the `searchText`.
