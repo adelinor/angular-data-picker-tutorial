@@ -1230,6 +1230,7 @@ by:
 * the size of the search results: empty or not?
 
 The flow of use of the widget for an empty fields is as follows:
+
 1.  Show the search text input (and the search button)
     - The input text has to be blank
     - No search results are shown
