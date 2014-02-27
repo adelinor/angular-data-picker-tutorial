@@ -28,3 +28,12 @@
         </tbody>
     </table>
 </div>
+
+<div class="input-group" ng-show="selection">
+    <input type="text" class="form-control" readonly="readonly"
+            value="{{bindObj[bindProp].displayName}}">
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default"
+            ng-click="unselectFn()">&times;</button>
+    </span>
+</div>

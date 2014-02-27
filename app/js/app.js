@@ -32,6 +32,11 @@ app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 				scope.selection = dn;
 			};
 
+			scope.unselectFn = function() {
+				scope.bindObj[scope.bindProp] = undefined;
+				scope.selection = undefined;
+			};
+
 			// Update selection, updates object's property
 			scope.$watch('selection', function(val) {
 					var m;
