@@ -1249,7 +1249,7 @@ The flow of use of the widget for an empty fields is as follows:
 The only transition possible out of state [3.] is unselect this takes the
 user back to [1.]
 
-<img src="site/step05_states.png" alt="States of data picker" style="width: auto">
+<img src="site/step05_states.png" alt="States of data picker" style="width: 868px; height: 516px;">
 
 When editing an already assigned value, the initial state is [3.]
 
