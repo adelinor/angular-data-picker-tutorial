@@ -796,7 +796,8 @@ by setting a blank new person or by setting a person object to edit. The view el
 for the work address binds to a variable called `selection`. How do we bridge
 the two models and update them from each other? 
 
-![Binding problem to solve](site/step04_binding_to_solve.png)
+<img src="site/step04_binding_to_solve.png"
+     alt="Binding problem to solve" width="75%">
 
 The link function, a controller for the view element, has the knowledge
 of boths models that need to be connected. *The link function is invoked
@@ -804,7 +805,8 @@ once only per use of the directive*. You can neverthless declare observers
 that will let you react on updates on both ends: an update to the 
 `selection` variable or to `person.workAddress`.
 
-![Binding problem to solve](site/step04_binding_a_solution.png)
+<img src="site/step04_binding_a_solution.png"
+     alt="Binding a solution" width="75%">
 
 In the link function, the `scope` variable comes with a function called `$watch`
 for that purpose. We then update our link function implementation in the 
@@ -866,7 +868,8 @@ element which shows only if the work address exists:
 
 Now we can test: add a new person, edit it: the binding works both ways!
 
-![Binding both ways](site/step04_binding_impl.png)
+<img src="site/step04_binding_impl.png"
+     alt="Binding both ways" width="75%">
 
 We add a bit more data to the file that emulates a backend message
 *search-orgs.js*. Here is the updated content:
@@ -955,7 +958,8 @@ scope.searchFn = function() {
 Let's try it! Enter some text in the input text form and click on the
 Search button, you should get an alert message as follows:
 
-![Clicking the search button](site/step05_click_search_button.png)
+<img src="site/step05_click_search_button.png"
+     alt="Clicking the search button" width="60%">
 
 Activate the search by hitting the Return key
 ---------------------------------------------
