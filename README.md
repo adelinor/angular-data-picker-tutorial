@@ -1173,7 +1173,7 @@ scope.selectFn = function(dn) {
 Let's try it! Type abc and search ...
 
 <img src="site/step05_result_table.png"
-  alt="Search results in table" width="50%">
+  alt="Search results in table" width="75%">
 
 Show selected search result and allow to unselect
 -------------------------------------------------
@@ -1250,7 +1250,7 @@ The flow of use of the widget for an empty fields is as follows:
 The only transition possible out of state [3.] is unselect this takes the
 user back to [1.]
 
-<img src="site/step05_states.png" alt="States of data picker" width="50%">
+<img src="site/step05_states.png" alt="States of data picker" width="75%">
 
 When editing an already assigned value, the initial state is [3.]
 
