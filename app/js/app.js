@@ -10,14 +10,26 @@ app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 		scope: {
 			id: '@',
 			bindObj: '=',
-			bindProp: '@'
+			bindProp: '@',
+			searchSizeLimit: '@'
 		},
 		templateUrl: "datapicker/tutorial-datapicker.html",
 		link: function(scope, el, attrs, ctrl) {
 			scope.searchFn = function() {
 				orgSearchProvider.search(scope.searchText, function(data) {
-        			scope.searchResults = data;
-    			});
+					var l = data.length;
+					scope.searchLimitExceeded = (scope.searchSizeLimit
+							&& l > scope.searchSizeLimit);
+
+					//Reduce the number of results to the limit
+					if (scope.searchLimitExceeded) {
+						scope.searchResults = data.slice(0,
+												scope.searchSizeLimit);
+
+					} else {
+						scope.searchResults = data;
+					}
+				});
 			};
 
 			var triggerSearchFn = function(e) {

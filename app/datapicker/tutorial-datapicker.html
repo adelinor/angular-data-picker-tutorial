@@ -13,6 +13,10 @@
 	ng-show="searchResults && searchResults.length == 0">No results found
 	for the provided criteria</p>
 
+<p class="help-block has-warning"
+   ng-show="searchLimitExceeded">Number of results exceeds limit,
+   please refine criteria</p>
+
 <div class="panel"
      style="margin-top: 1em;"
      ng-show="searchResults && searchResults.length > 0">
