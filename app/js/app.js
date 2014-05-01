@@ -30,6 +30,22 @@ app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 
 			scope.selectFn = function(dn) {
 				scope.selection = dn;
+				scope.searchText = '';
+
+				//Update object's property
+				var m;
+				for (var i = 0; (! m) &&
+						scope.searchResults &&
+						(i < scope.searchResults.length); i++) {
+					var c = scope.searchResults[i];
+					if (dn === c.dn) {
+						m = c;
+					}
+				}
+				scope.bindObj[scope.bindProp] = m;
+
+				scope.searchResults = undefined;
+
 			};
 
 			scope.unselectFn = function() {
@@ -37,19 +53,6 @@ app.directive("tutorialDatapicker", function($http,orgSearchProvider) {
 				scope.selection = undefined;
 			};
 
-			// Update selection, updates object's property
-			scope.$watch('selection', function(val) {
-					var m;
-					for (var i = 0; (! m) &&
-							scope.searchResults &&
-							(i < scope.searchResults.length); i++) {
-						var c = scope.searchResults[i];
-						if (val === c.dn) {
-							m = c;
-						}
-					}
-					scope.bindObj[scope.bindProp] = m;
-				});
 
 			// Update bindObj, updates selection
 			scope.$watch('bindObj', function(value) {
