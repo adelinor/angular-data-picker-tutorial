@@ -1335,9 +1335,15 @@ Immediately after the div element showing the search input text (i.e.
 the error message:
 
 ```html
+<div class="input-group" ng-show="! selection">
+	<!-- ... -->
+</div>
+
+<!-- Error, warning, info messages -->
 <p class="help-block has-error"
-   ng-show="searchResults && searchResults.length == 0">No results found
-   for the provided criteria</p>
+	ng-show="searchResults && searchResults.length == 0">No results found
+	for the provided criteria</p>
+
 ```
 
 Show an error message when there are too many matches
