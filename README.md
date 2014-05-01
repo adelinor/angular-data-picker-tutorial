@@ -1269,12 +1269,49 @@ In state [3.], the content of `selection` is set and `searchResults` is empty
 To resolve the problems, we amend `selectFn` to additionally clear
 the `searchResults` and blank the `searchText`.
 
+The code to populate the target object property is also moved in the
+`selectFn` function. This is because we are clearing the searchResults but
+before clearing it, the property value needs to be assigned.
+
 ```js
 scope.selectFn = function(dn) {
 	scope.selection = dn;
-	scope.searchResults = undefined;
 	scope.searchText = '';
+
+	//Update object's property
+	var m;
+	for (var i = 0; (! m) &&
+			scope.searchResults &&
+			(i < scope.searchResults.length); i++) {
+		var c = scope.searchResults[i];
+		if (dn === c.dn) {
+			m = c;
+		}
+	}
+	scope.bindObj[scope.bindProp] = m;
+
+	scope.searchResults = undefined;
 };
+```
+
+As explained above this section of code is deleted:
+
+```js
+// -- DELETE THIS SECTION OF CODE --
+// Update selection, updates object's property
+scope.$watch('selection', function(val) {
+	var m;
+	for (var i = 0; (! m) &&
+			scope.searchResults &&
+			(i < scope.searchResults.length); i++) {
+		var c = scope.searchResults[i];
+		if (val === c.dn) {
+			m = c;
+		}
+	}
+	scope.bindObj[scope.bindProp] = m;
+});
+
 ```
 
 We also need to hide the search box when there is a selection. This is done
@@ -1286,7 +1323,7 @@ by adding a ng-show attribute:
 		ng-model="searchText">
 ```
 
-Now the datapicker should behave as expected.
+Now the datapicker behaves as expected.
 
 Show an error message when no match is found
 --------------------------------------------
