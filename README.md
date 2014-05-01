@@ -1389,8 +1389,8 @@ scope.searchFn = function() {
 
 ```
 
-After the block for the "no search results" error, we add the warning
-block for the search size limit exceeded:
+After the `<p>` element for the "no search results" error, we add the warning
+message for the search size limit exceeded:
 
 ```html
 <p class="help-block has-warning"
