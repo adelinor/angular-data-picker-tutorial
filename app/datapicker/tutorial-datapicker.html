@@ -8,6 +8,11 @@
     </span>
 </div>
 
+<!-- Error, warning, info messages -->
+<p class="help-block has-error"
+	ng-show="searchResults && searchResults.length == 0">No results found
+	for the provided criteria</p>
+
 <div class="panel"
      style="margin-top: 1em;"
      ng-show="searchResults && searchResults.length > 0">
